@@ -1,406 +1,339 @@
 # Building a Windows Server 2019 Lab on Microsoft Hyper-V
 
-> **Part 1:** Preparatory Steps and Creating a Virtual Machine
+> **Part 1:** Preparing the Environment and Creating a Virtual Machine
+
 
 ## Overview
 
-This lab demonstrates how to prepare a Microsoft Hyper-V environment and create a Generation 2 Windows Server 2019 virtual machine.
+Creating a virtual machine involves much more than clicking **New → Virtual Machine**.
 
-Rather than jumping directly into creating a virtual machine, this lab follows a structured approach by first preparing the environment. This includes organizing storage, downloading the Windows Server installation media, creating an isolated virtual network, configuring the virtual machine, and verifying its settings before the first boot.
+A reliable virtualization environment begins with proper planning. Before installing an operating system, you should organize storage, prepare networking, download trusted installation media, configure the virtual machine correctly, and verify every important setting before the first boot.
 
-Following these preparatory steps helps build a clean, organized, and reliable virtualization environment while reducing configuration mistakes later during the Windows Server installation.
+This lab demonstrates the complete preparation process for building a **Windows Server 2019** virtual machine using **Microsoft Hyper-V**.
+
+By following these best practices, you establish a solid foundation for future Windows Server administration and Active Directory labs.
 
 
-## Lab Objectives
+## Learning Objectives
 
-By completing this lab, you will learn how to:
+After completing this lab, you will be able to:
 
-- Create a dedicated storage location for Hyper-V virtual machines
-- Download the Windows Server 2019 Evaluation ISO from Microsoft
-- Create and configure a Private Virtual Switch
+- Prepare a structured Hyper-V lab environment
+- Organize storage for virtual machines
+- Download the Windows Server 2019 Evaluation ISO
+- Create an isolated virtual network using a Private Virtual Switch
 - Create a Generation 2 virtual machine
 - Configure memory, networking and storage
-- Attach the Windows Server installation ISO
+- Attach installation media
 - Verify the virtual machine configuration before powering it on
 
+---
 
 ## Lab Environment
 
-| Component | Details |
-|----------|---------|
+| Component | Configuration |
+|-----------|---------------|
 | Hypervisor | Microsoft Hyper-V |
 | Guest Operating System | Windows Server 2019 Evaluation |
-| Virtual Machine Generation | Generation 2 |
+| VM Generation | Generation 2 |
+| Startup Memory | 4096 MB |
+| Virtual Hard Disk | 50 GB VHDX |
 | Network Type | Private Virtual Switch |
-| Startup Memory | 4096 MB (4 GB) |
-| Virtual Hard Disk | 50 GB (VHDX) |
 
-
-## Prerequisites
-
-Before starting this lab, ensure that:
-
-- Microsoft Hyper-V is installed and enabled.
-- Hardware virtualization is enabled in the BIOS/UEFI.
-- Windows Server 2019 Evaluation ISO has been downloaded from Microsoft's official Evaluation Center.
-- You have sufficient free disk space to create the virtual machine.
 
 
 # Step 1: Create a Storage Folder for the Virtual Machine
 
-Creating a dedicated storage folder keeps all virtual machine resources, including configuration files, virtual hard disks, and checkpoints in a single location. This makes the environment easier to manage and simplifies future backup and maintenance tasks.
+A dedicated storage folder keeps virtual machine configuration files, virtual hard disks and checkpoints organized in one location.
 
-### Procedure
-
-1. Open **File Explorer**.
-2. Navigate to a drive with sufficient free space.
-3. Create a new folder (for example, **HyperV-Labs**).
-4. Optionally create subfolders such as:
-
-- Virtual Machines
-- Virtual Hard Disks
+This makes future maintenance, backups and troubleshooting much easier.
 
 ### Screenshot
 
-![Create VM Storage Folder](images/01-create-vm-storage-folder.png)
+![Create VM Storage Folder](images/01-create-vm1-storage-folder.png)
+
+### Screenshot
+
+![VM Storage Folder Created](images/01-vm-storage-folder-created.png)
 
 
 # Step 2: Download Windows Server 2019
 
-Windows Server 2019 is distributed as an ISO image that Hyper-V mounts as a virtual DVD during installation.
+Windows Server is installed from an ISO image.
 
-Always download installation media from Microsoft's official Evaluation Center to ensure the image is authentic and free from tampering.
-
-### Procedure
-
-1. Visit the Microsoft Evaluation Center.
-2. Download the **Windows Server 2019 Evaluation ISO**.
-3. Choose your preferred language.
-4. Save the ISO inside your Hyper-V lab folder.
+Always download installation media directly from Microsoft's Evaluation Center to ensure authenticity and integrity.
 
 ### Screenshot
 
-![Download Windows Server ISO](images/02-download-windows-server-2019-iso.png)
+![Download Windows Server ISO](images/02-download-windows-server-iso.png)
 
 
-# Step 3: Create a Private Virtual Switch
+# Step 3: Open Hyper-V Manager
 
-Virtual machines require a virtual switch for network connectivity.
+Hyper-V Manager provides the interface used to create, configure and manage virtual machines.
 
-For this lab, a **Private Virtual Switch** is used to create an isolated environment where virtual machines can communicate without connecting to the host computer or the Internet.
-
-This prevents accidental interaction with your production or home network while building the lab.
-
-### Procedure
-
-1. Open **Hyper-V Manager**.
-2. Select **Virtual Switch Manager**.
-3. Choose **Private**.
-4. Click **Create Virtual Switch**.
-5. Assign a descriptive name.
-6. Save the configuration.
+This is where the entire virtualization environment is administered.
 
 ### Screenshot
 
-![Create Private Virtual Switch](images/03-create-private-virtual-switch.png)
+![Open Hyper-V Manager](images/03-open-hyper-v-manager.png)
 
 
-# Part 1: Create the Virtual Machine
+# Step 4: Create a Private Virtual Switch
 
-With the storage location, installation media and virtual network prepared, the environment is now ready for the virtual machine.
+Virtual machines require a virtual switch before they can communicate across a network.
 
-The following steps create the virtual machine shell that will host Windows Server 2019 in the next part of this series.
-## Step 4: Launch the New Virtual Machine Wizard
+For this lab, a **Private Virtual Switch** creates an isolated environment where virtual machines can communicate without accessing the host network or the Internet.
 
-With the preparation complete, the next stage is to create the virtual machine.
+### Open Virtual Switch Manager
 
-At this point, you are not installing Windows Server yet. Instead, you are defining the virtual machine's hardware configuration, including its firmware, memory, networking, storage, and installation media.
+![Open Virtual Switch Manager](images/04-create-virtual-switch.png)
 
-### Procedure
+### Create the Private Virtual Switch
 
-1. Open **Hyper-V Manager**.
-2. In the **Actions** pane, select **New** → **Virtual Machine**.
-3. When the **Before You Begin** page appears, click **Next**.
-
-### Screenshot
-
-![Launch the New Virtual Machine Wizard](images/04-start-new-virtual-machine-wizard.png)
+![Create Private Virtual Switch](images/04-create-virtual-switch2.png)
 
 
-## Step 5: Specify the Virtual Machine Name and Location
+# Step 5: Launch the New Virtual Machine Wizard
 
-Giving your virtual machine a descriptive name makes it easier to identify later, especially when managing multiple servers.
+With the environment prepared, the next step is to create the virtual machine.
 
-Instead of storing the virtual machine in Hyper-V's default location, this lab stores it inside the dedicated lab folder created earlier. Keeping all files together simplifies management, backups, and troubleshooting.
+### Open the Wizard
 
-### Procedure
+![Launch New Virtual Machine Wizard](images/05-new-virtual-machine.png)
 
-1. Enter a descriptive name for the virtual machine.
-2. Select **Store the virtual machine in a different location**.
-3. Browse to the storage folder created in Step 1.
-4. Click **Next**.
+### Before You Begin
 
-### Screenshot
+The wizard displays an introductory page explaining the creation process.
 
-![Specify Name and Location](images/05-configure-vm-name-and-location.png)
+Click **Next** to continue.
+
+![Before You Begin](images/05-new-virtual-machine2.png)
 
 
-## Step 6: Select Generation 2
+# Step 6: Configure the Virtual Machine Name and Storage Location
 
-Hyper-V provides two virtual machine generations.
+Provide a meaningful name for the virtual machine and store it inside the dedicated lab folder created earlier.
 
-For Windows Server 2019, **Generation 2** is recommended because it supports modern firmware technologies such as UEFI and Secure Boot.
-
-These features improve compatibility with current operating systems and provide a more modern boot process.
-
-### Procedure
-
-1. Select **Generation 2**.
-2. Click **Next**.
+Keeping the VM in its own location simplifies management and keeps related files together.
 
 ### Screenshot
 
-![Select Generation 2](images/06-select-generation-2.png)
+![Configure VM Name and Location](images/06-configure-vm-name-and-location.png)
 
 
-## Step 7: Assign Startup Memory
+# Step 7: Select Generation 2
 
-Memory allocation determines how much RAM is available when the virtual machine starts.
+Generation 2 virtual machines support modern features including:
 
-For this lab, the startup memory is configured as **4096 MB (4 GB)**.
+- UEFI firmware
+- Secure Boot
+- Faster boot process
+- Improved compatibility with modern operating systems
 
-Dynamic Memory is also enabled so Hyper-V can adjust memory usage efficiently as workloads change.
-
-### Procedure
-
-1. Enter **4096 MB** as the Startup Memory.
-2. Enable **Use Dynamic Memory for this virtual machine**.
-3. Click **Next**.
+Windows Server 2019 is fully supported on Generation 2 virtual machines.
 
 ### Screenshot
 
-![Assign Startup Memory](images/07-assign-startup-memory.png)
+![Select Generation 2](images/07-select-generation-2.png)
 
 
-## Step 8: Configure Networking
+# Step 8: Assign Startup Memory
 
-The virtual machine must be connected to a virtual switch before it can communicate with other systems.
+Memory determines the resources available when the virtual machine starts.
 
-For this lab, connect the VM to the **Private Virtual Switch** created earlier.
+For this lab:
 
-This creates an isolated lab environment without exposing the virtual machine to the host network or the Internet.
+- Startup Memory: **4096 MB**
+- Dynamic Memory: **Enabled**
 
-### Procedure
-
-1. From the **Connection** drop-down list, select your Private Virtual Switch.
-2. Click **Next**.
+Dynamic Memory allows Hyper-V to optimize RAM usage while the virtual machine is running.
 
 ### Screenshot
 
-![Configure Networking](images/08-configure-network-connection.png)
+![Assign Memory](images/08-assign-memory.png)
 
 
-## Step 9: Create the Virtual Hard Disk
+# Step 9: Configure Networking
 
-The virtual hard disk (VHDX) stores the operating system, applications, and data for the virtual machine.
+Connect the virtual machine to the **Private Virtual Switch** created earlier.
 
-A **50 GB dynamically expanding VHDX** provides sufficient storage for Windows Server while allowing disk usage to grow only as needed.
-
-### Procedure
-
-1. Select **Create a virtual hard disk**.
-2. Specify the storage location.
-3. Enter a descriptive disk name.
-4. Set the disk size to **50 GB**.
-5. Click **Next**.
+This ensures the VM communicates only within the isolated lab environment.
 
 ### Screenshot
 
-![Create Virtual Hard Disk](images/09-create-virtual-hard-disk.png)
+![Configure Networking](images/09-configure-networking.png)
 
 
-## Step 10: Attach the Windows Server Installation Media
+# Step 10: Create the Virtual Hard Disk
 
-Instead of installing the operating system immediately, Hyper-V first needs to know where the installation media is located.
+The virtual hard disk stores:
 
-The Windows Server 2019 ISO downloaded earlier is attached as a virtual DVD drive.
+- Windows Server
+- Installed applications
+- User data
+- System configuration
 
-### Procedure
-
-1. Select **Install an operating system from a bootable image file**.
-2. Click **Browse**.
-3. Select the Windows Server 2019 ISO.
-4. Click **Next**.
+For this lab, create a **50 GB dynamically expanding VHDX**.
 
 ### Screenshot
 
-![Attach Windows Server ISO](images/10-select-installation-media.png)
+![Create Virtual Hard Disk](images/10-create-virtual-hard-disk.png)
 
 
-## Step 11: Review and Create the Virtual Machine
+# Step 11: Choose the Installation Media
 
-Before creating the virtual machine, review every configuration carefully.
+Attach the Windows Server 2019 Evaluation ISO.
 
-This is the final opportunity to confirm that the storage location, memory allocation, networking, and installation media are correct.
-
-If any setting is incorrect, use the **Previous** button to make adjustments before finishing the wizard.
-
-### Procedure
-
-1. Review the configuration summary.
-2. Click **Finish**.
-
-Hyper-V will create the virtual machine and return you to the main Hyper-V Manager window.
+Hyper-V mounts this ISO as a virtual DVD drive during installation.
 
 ### Screenshot
 
-![Review Configuration Summary](images/11-review-virtual-machine-summary.png)
+![Installation Options](images/11-installation-options.png)
 
 
-## Step 12: Confirm the Virtual Machine Has Been Created
+# Step 12: Review the Configuration Summary
 
-After the wizard closes, verify that the virtual machine appears in **Hyper-V Manager**.
+Before creating the virtual machine, carefully review every configuration.
 
-At this stage, the virtual machine should appear in the **Off** state. This is expected because Windows Server has not yet been installed.
+Confirm:
+
+- VM name
+- Storage location
+- Memory
+- Network
+- Virtual hard disk
+- Installation media
+
+If any setting is incorrect, return to the previous page and update it before continuing.
 
 ### Screenshot
 
-![Virtual Machine Created](images/12-virtual-machine-created.png)
+![Review Summary](images/12-review-summary.png)
+
+
+# Step 13: Confirm the Virtual Machine Has Been Created
+
+After clicking **Finish**, Hyper-V creates the virtual machine.
+
+At this stage, the VM should appear in **Hyper-V Manager** with a status of **Off**.
+
+This indicates that the virtual machine has been created successfully and is ready for configuration verification.
+
+### Screenshot
+
+![Virtual Machine Created](images/13-virtual-machine-created.png)
+
 
 # Verify the Virtual Machine Configuration
 
-Before powering on the virtual machine for the first time, verify that its configuration is correct. Performing these checks now helps prevent installation issues and reduces the need for reconfiguration later.
+Before powering on the virtual machine, verify its configuration.
+
+Checking these settings now helps prevent installation issues later.
 
 
-## Step 13: Verify Firmware Settings
+## Step 14: Open Virtual Machine Settings
 
-Generation 2 virtual machines use UEFI firmware. Before installing Windows Server, ensure the virtual DVD drive is first in the boot order so the virtual machine boots from the Windows Server ISO.
+Open the virtual machine's **Settings** window.
 
-### Procedure
-
-1. Right-click the virtual machine and select **Settings**.
-2. Select **Firmware**.
-3. Confirm that **DVD Drive** appears at the top of the boot order.
+This provides access to all hardware and firmware configuration options.
 
 ### Screenshot
 
-![Verify Firmware Settings](images/13-verify-firmware-settings.png)
+![Open VM Settings](images/14-open-vm-settings.png)
 
 
-## Step 14: Verify Security Settings
+## Step 15: Verify Firmware Settings
 
-Generation 2 virtual machines support Secure Boot.
+Generation 2 virtual machines use **UEFI firmware**.
 
-Windows Server 2019 requires Secure Boot to use the **Microsoft Windows** template.
-
-### Procedure
-
-1. Select **Security**.
-2. Confirm **Enable Secure Boot** is checked.
-3. Verify that the template is set to **Microsoft Windows**.
+Verify that the **DVD Drive** appears before the hard drive in the boot order so the virtual machine starts from the Windows Server installation media.
 
 ### Screenshot
 
-![Verify Security Settings](images/14-verify-security-settings.png)
+![Verify Firmware Settings](images/15-verify-firmware-settings.png)
 
 
-## Step 15: Verify Memory Configuration
+## Step 16: Verify Security Settings
 
-Confirm that the startup memory matches the value configured during virtual machine creation.
+Generation 2 virtual machines support **Secure Boot**.
 
-### Procedure
+For Windows Server 2019:
 
-1. Select **Memory**.
-2. Verify that Startup RAM is set to **4096 MB**.
-3. Confirm that **Dynamic Memory** is enabled.
+- Secure Boot should be enabled.
+- The Secure Boot template should be set to **Microsoft Windows**.
 
-### Screenshot
-
-![Verify Memory Configuration](images/15-verify-memory-settings.png)
-
-
-## Step 16: Verify Processor Configuration
-
-Allocating too many virtual processors can reduce host performance.
-
-A good practice is to assign no more than half of the host's available logical processors to a single virtual machine.
-
-### Procedure
-
-1. Select **Processor**.
-2. Verify the configured number of virtual processors.
+These settings help ensure a secure boot process.
 
 ### Screenshot
 
-![Verify Processor Configuration](images/16-verify-processor-settings.png)
+![Verify Security Settings](images/16-verify-security-settings.png)
 
 
-## Step 17: Verify Network Adapter Configuration
+## Step 17: Verify Memory Configuration
 
-Ensure that the virtual machine is connected to the correct virtual switch.
+Confirm that the startup memory matches the value configured during the virtual machine creation process.
 
-For this lab, the VM should be connected to the **Private Virtual Switch** created earlier.
-
-### Procedure
-
-1. Select **Network Adapter**.
-2. Verify that the correct virtual switch is selected.
+Also verify that **Dynamic Memory** is enabled if required.
 
 ### Screenshot
 
-![Verify Network Adapter](images/17-verify-network-adapter-settings.png)
+![Verify Memory Configuration](images/17-verify-memory-configuration.png)
 
 
-## Verification Checklist
+## Step 18: Verify Network Adapter Configuration
 
-Before proceeding to the Windows Server installation, confirm that the following requirements have been met:
+Finally, verify that the virtual machine is connected to the correct **Private Virtual Switch**.
 
-- ✅ Dedicated VM storage folder created
-- ✅ Windows Server 2019 Evaluation ISO downloaded
+Without the correct virtual switch, the virtual machine will not communicate with other systems in the lab.
+
+### Screenshot
+
+![Verify Network Adapter](images/18-verify-network-adapter.png)
+
+
+# Verification Checklist
+
+Before proceeding to the Windows Server installation, confirm the following:
+
+- ✅ Hyper-V environment prepared
+- ✅ VM storage location created
+- ✅ Windows Server ISO downloaded
 - ✅ Private Virtual Switch configured
 - ✅ Generation 2 virtual machine created
 - ✅ Startup memory configured
 - ✅ Virtual hard disk created
-- ✅ Windows Server ISO attached
-- ✅ Firmware settings verified
-- ✅ Secure Boot enabled
-- ✅ Processor configuration verified
-- ✅ Network adapter connected to the Private Virtual Switch
+- ✅ Installation media attached
+- ✅ Firmware verified
+- ✅ Secure Boot verified
+- ✅ Memory configuration verified
+- ✅ Network adapter verified
 
-If every item above has been completed successfully, the virtual machine is ready for Windows Server installation.
-
-
-## Key Takeaways
-
-In this lab, you learned how to:
-
-- Prepare a Hyper-V environment for virtualization
-- Organize virtual machine storage
-- Download trusted installation media from Microsoft
-- Configure an isolated networking environment using a Private Virtual Switch
-- Create a Generation 2 virtual machine
-- Configure memory, storage, networking, and installation media
-- Verify virtual machine settings before the first boot
-
-These foundational tasks help create a stable virtualization environment and reduce configuration issues during operating system installation.
+If all items above are complete, the virtual machine is ready for operating system installation.
 
 
-## Next Steps
+# Key Takeaways
 
-This concludes **Part 1** of the Hyper-V lab series.
+In this lab, you learned how to prepare a professional Hyper-V environment before installing Windows Server.
 
-In **Part 2**, you will:
+Although creating a virtual machine takes only a few minutes, careful preparation helps avoid configuration errors and creates a more reliable virtualization environment.
+
+These same preparation practices are commonly used in enterprise environments when deploying virtual infrastructure.
+
+
+# Next Steps
+
+This guide covers the first part of building a Windows Server 2019 virtual machine on Microsoft Hyper-V.
+
+With the virtual machine successfully created and verified, the environment is now ready for operating system installation and subsequent Windows Server administration labs.
+
+In the next part, you will:
 
 - Start the virtual machine
 - Install Windows Server 2019
-- Complete the initial Windows Server setup
 - Configure the Administrator account
-- Verify network connectivity within the isolated lab
-- Enable Remote Desktop for remote administration
+- Complete the initial server setup
+- Prepare the virtual machine for future Windows Server administration and infrastructure labs
 
 
-## Repository
-
-If you found this lab helpful, consider giving the repository a ⭐.
-
-Contributions, suggestions, and feedback are always welcome.
+⭐ If you found this guide helpful, consider starring this repository.
